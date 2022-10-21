@@ -5,7 +5,7 @@ class DioHelper {
   static init() {
     dio = Dio(BaseOptions(
       // baseUrl: 'http://192.168.88.198:3000/',
-      baseUrl: 'http://localhost:3000/',
+      baseUrl: 'https://api.marche247.com/',
       receiveDataWhenStatusError: true,
     ));
   }
