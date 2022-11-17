@@ -54,7 +54,7 @@ class _ItemCardState extends State<ItemCard> {
                             top: Radius.circular(Dimensions.RADIUS_SMALL)),
                         child: Image(
                           image: NetworkImage(
-                              "http://localhost:3000/img?id=" +
+                              "https://api.marche247.com/img?id=" +
                                   widget.product.image!,
                               headers: {'x-auth-token': "token"}),
                           width: 180,

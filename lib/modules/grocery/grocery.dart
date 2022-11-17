@@ -66,7 +66,7 @@ class _GroceryScreenState extends State<GroceryScreen> {
                     items: [1, 2]
                         .map(
                           (e) => Image.asset(
-                            "banner0.jpg",
+                            "assets/banner0.jpg",
                             width: double.infinity,
                             fit: BoxFit.cover,
                           ),
@@ -151,6 +151,7 @@ class _GroceryScreenState extends State<GroceryScreen> {
                                         fontWeight: FontWeight.w500),
                                   ),
                                   DropdownButton<ShopsDataModel>(
+                                    // ignore: prefer_is_empty
                                     value: ShopCubit.get(context)
                                                 .shop!
                                                 .locations[activeLocation]
@@ -162,6 +163,7 @@ class _GroceryScreenState extends State<GroceryScreen> {
                                             .locations[activeLocation]
                                             .shops[activeShop]
                                         : null,
+                                    // ignore: prefer_is_empty
                                     items: ShopCubit.get(context)
                                                 .shop!
                                                 .locations[activeLocation]
@@ -189,8 +191,7 @@ class _GroceryScreenState extends State<GroceryScreen> {
                                                 .shop!
                                                 .locations[activeLocation]
                                                 .shops
-                                                .indexOf(value!) <
-                                            -1) {
+                                                .contains(value!)) {
                                           activeShop = ShopCubit.get(context)
                                               .shop!
                                               .locations[activeLocation]

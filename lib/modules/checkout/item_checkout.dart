@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:marche/layout/shop_layout/shop_layout_screen.dart';
 import 'package:marche/main.dart';
 import 'package:marche/models/shop_app/cart_model.dart';
@@ -19,10 +21,13 @@ class Item_Checkout extends StatefulWidget {
 }
 
 class _Item_CheckoutState extends State<Item_Checkout> {
+
+
+    final _formKey = GlobalKey<FormBuilderState>();
+    bool _phoneHasError = false;
+    String phone = '';
   @override
   Widget build(BuildContext context) {
-    // widget.originalcart.elementAt(1);
-    // widget.originalcart.
 
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, states) {
@@ -33,19 +38,25 @@ class _Item_CheckoutState extends State<Item_Checkout> {
         ShopCubit.get(context).cart.forEach((e) => print(e.quantity));
         return Scaffold(
           appBar: AppBar(
-            title: Text("Checkout"),
+            title: const Text("Checkout"),
           ),
-          body: Container(
-            margin:
-                EdgeInsets.only(bottom: MediaQuery.of(context).size.width / 4),
-            child: ShopCubit.get(context).cart.isNotEmpty
-                ? ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: ShopCubit.get(context).cart.length,
-                    itemBuilder: (context, index) {
-                      return item(context, index);
-                    })
-                : const Center(child: Center(child: Text("No Orders in cart"))),
+          body: Column(
+            children: [
+               ShopCubit.get(context).cart.isNotEmpty
+               ? Text("phone") : const SizedBox(height: 30,), 
+              Container(
+                margin:
+                    EdgeInsets.only(bottom: MediaQuery.of(context).size.width / 4),
+                child: ShopCubit.get(context).cart.isNotEmpty
+                    ? ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: ShopCubit.get(context).cart.length,
+                        itemBuilder: (context, index) {
+                          return item(context, index);
+                        })
+                    : const Center(child: Center(child: Text("No Orders in cart"))),
+              ),
+            ],
           ),
           bottomSheet: Container(
             margin: const EdgeInsets.all(10),
@@ -137,14 +148,14 @@ class _Item_CheckoutState extends State<Item_Checkout> {
                 direction: Axis.horizontal,
                 children: <Widget>[
                   CircularProgressIndicator(),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 15),
                   ),
                   Flexible(
                       flex: 8,
                       child: Text(
                         title,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       )),
                 ],
@@ -156,18 +167,7 @@ class _Item_CheckoutState extends State<Item_Checkout> {
     }
   }
 
-  dexService() {
-    return 3;
-  }
 
-  double? orderCost() {
-    double response = 0;
-    [{}].forEach((value) {
-      response += 2;
-      // (double.parse(value["price"]) * double.parse(value["quantity"]));
-    });
-    return response;
-  }
 
   double? total(BuildContext context) {
     double total = 0;
@@ -177,11 +177,6 @@ class _Item_CheckoutState extends State<Item_Checkout> {
     return total;
   }
 
-  void incrementItemCount(id) {}
-
-  void decrementItemCount(id) {
-    setState(() {});
-  }
 
   Widget item(BuildContext context, int index) {
     return Padding(
@@ -345,7 +340,7 @@ class _Item_CheckoutState extends State<Item_Checkout> {
             title: Text(title),
             content: Text(massage),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 child: Text("Close"),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -356,177 +351,5 @@ class _Item_CheckoutState extends State<Item_Checkout> {
         });
   }
 
-  nawecVendComplete() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Center(
-                child: Text(
-              "Order Successful",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black38,
-              ),
-            )),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              "Meter no: 07213432323 ",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black38,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              "Token: 3234 5344 5342 4345 ",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black38,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              navigateTo(
-                  context,
-                  MyApp(
-                    startWidget: ShopLayoutScreen(),
-                  ));
-            },
-            child: Text(
-              "Done",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black38,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget airtimeComplete() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Center(child: Text("Order Successful")),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(children: [
-              Text("Phone no: 3247034 "),
-            ]),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(children: [
-              Text("Carrier: QCELL "),
-            ]),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(children: [
-              Text("Amount: D 200 "),
-            ]),
-          ),
-          TextButton(
-            onPressed: () {
-              navigateTo(
-                  context,
-                  MyApp(
-                    startWidget: ShopLayoutScreen(),
-                  ));
-            },
-            child: Text(
-              "Done",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black38,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget airtimeError() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Center(
-                child: Icon(
-              Icons.error,
-              size: 40,
-            )),
-          ),
-          TextButton(
-            onPressed: () {
-              ShopCubit.get(context).airtime({"type": "airtime"});
-            },
-            child: Text(
-              "Oops an error occured, Please try again.",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black38,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-    ;
-  }
-
-  Widget nawecVendError() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Center(
-                child: Icon(
-              Icons.error,
-              size: 40,
-            )),
-          ),
-          TextButton(
-            onPressed: () {
-              // ShopCubit.get(context).nawecVend({"type": "vend"});
-            },
-            child: Text(
-              "Oops an error occured, Please try again",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black38,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-    ;
-  }
+ 
 }

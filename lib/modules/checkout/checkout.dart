@@ -6,8 +6,6 @@ import 'package:marche/main.dart';
 import 'package:marche/models/shop_app/cart_model.dart';
 import 'package:marche/modules/cubit/cubit.dart';
 import 'package:marche/modules/cubit/states.dart';
-import 'dart:js' as js;
-
 import '../../shared/components/components.dart';
 
 class Final_Checkout extends StatefulWidget {
@@ -107,13 +105,10 @@ class _Final_CheckoutState extends State<Final_Checkout> {
 
                                   Future.delayed(const Duration(seconds: 2),
                                       () {
-                                    setState(() {});
-                                    js.context.callMethod('open', [
-                                      'https://www.takepayments.com/developer-support/resources/'
-                                    ]);
-                                    Navigator.of(context).pop();
-                                    navigateAndFinish(
-                                        context, ShopLayoutScreen());
+                                    // setState(() {});
+                                    // Navigator.of(context).pop();
+                                    // navigateAndFinish(
+                                    //     context, ShopLayoutScreen());
                                   });
                                 },
                                 child: Container(

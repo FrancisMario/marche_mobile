@@ -39,19 +39,19 @@ class ProductsScreen extends StatelessWidget {
   Widget servicesBuilder(BuildContext context) {
     const services = [
       {
-        "img": "grocery.jpg",
+        "img": "assets/grocery.jpg",
         "title": "Groceries",
         "description": "Buy groceries for across the gambia.",
         "onclick": GroceryScreen(),
       },
       {
-        "img": "airtime.png",
+        "img": "assets/airtime.png",
         "title": "Buy Airtime",
         "description": "Buy airtime for any phone number.",
         "onclick": BuyAirTime(),
       },
       {
-        "img": "cashpower.png",
+        "img": "assets/cashpower.png",
         "title": "Cash Power",
         "description": "Buy cash power for any meter no.",
         "onclick": BuyCashPower(),
@@ -67,7 +67,7 @@ class ProductsScreen extends StatelessWidget {
             items: [1, 2, 3, 4]
                 .map(
                   (e) => Image.asset(
-                    "banner0.jpg",
+                    "assets/banner0.jpg",
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),

@@ -13,7 +13,6 @@ import '../../modules/cubit/states.dart';
 import '../../modules/products/products_screen.dart';
 import '../../modules/settings/settings_screen.dart';
 import '../../shared/components/components.dart';
-import 'dart:js' as js;
 
 class ShopLayoutScreen extends StatefulWidget {
   dynamic callback = () => {};
@@ -57,8 +56,7 @@ class _ShopLayoutScreenState extends State<ShopLayoutScreen> {
       "name": "Terms and conditions",
       "icon": Icons.language,
       "onclick": (context) {
-        js.context
-            .callMethod('open', ['http://marche247.com/termsandcondition/']);
+        
       }
     },
   ];
