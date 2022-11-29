@@ -63,3 +63,14 @@ class ShopLoginSuccessState extends ShopStates {}
 class ShopLoginErrorState extends ShopStates {}
 
 class ShopRegisterChangePasswordVisibilityState extends ShopStates {}
+
+
+// payment link get
+
+class PaymentLinkInitialState extends ShopStates {}
+
+class PaymentLinkLoadingState extends ShopStates {}
+
+class PaymentLinkSuccessState extends ShopStates {}
+
+class PaymentLinkErrorState extends ShopStates {}

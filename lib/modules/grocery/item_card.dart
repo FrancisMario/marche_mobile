@@ -4,6 +4,7 @@ import 'package:marche/models/shop_app/shopdata_model.dart';
 import 'package:marche/modules/cubit/cubit.dart';
 import 'package:marche/modules/cubit/states.dart';
 import 'package:marche/shared/components/constants.dart';
+import 'package:marche/shared/networks/end_points.dart';
 import 'package:marche/shared/styles/dimensions.dart';
 
 import '../../models/shop_app/cart_model.dart';
@@ -54,7 +55,7 @@ class _ItemCardState extends State<ItemCard> {
                             top: Radius.circular(Dimensions.RADIUS_SMALL)),
                         child: Image(
                           image: NetworkImage(
-                              "https://api.marche247.com/img?id=" +
+                              '${URL}img?id=' +
                                   widget.product.image!,
                               headers: {'x-auth-token': "token"}),
                           width: 180,

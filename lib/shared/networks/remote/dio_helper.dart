@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:marche/shared/networks/end_points.dart';
 
 class DioHelper {
   static late Dio dio;
   static init() {
     dio = Dio(BaseOptions(
-      // baseUrl: 'http://192.168.88.198:3000/',
-      baseUrl: 'https://api.marche247.com/',
+      baseUrl: URL,
       receiveDataWhenStatusError: true,
     ));
   }

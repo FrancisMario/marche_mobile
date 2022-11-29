@@ -56,6 +56,7 @@ class Product {
   String? image;
   String? name;
   dynamic? active;
+  dynamic? shopid;
   dynamic? type;
   String? description;
 
@@ -63,6 +64,7 @@ class Product {
     id = json['_id'];
     price = json['price'];
     type = json['type'];
+    shopid = json['shopid'];
     active = json['active'];
     image = json['img'];
     name = json['name'];

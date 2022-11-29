@@ -148,13 +148,13 @@ Widget designedFormField({
         fillColor: Colors.white,
         filled: true,
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25.0),
+          borderRadius: BorderRadius.circular(5.0),
           borderSide: const BorderSide(
             color: Colors.red,
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25.0),
+          borderRadius: BorderRadius.circular(5.0),
           borderSide: const BorderSide(
             color: Colors.red,
             width: 2.0,

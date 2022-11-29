@@ -10,6 +10,7 @@ import 'package:marche/modules/cubit/cubit.dart';
 import 'package:marche/modules/cubit/states.dart';
 import 'package:marche/modules/login/shop_login-screen.dart';
 import 'package:marche/shared/components/constants.dart';
+import 'package:marche/shared/networks/end_points.dart';
 
 import '../../shared/components/components.dart';
 
@@ -21,14 +22,15 @@ class Item_Checkout extends StatefulWidget {
 }
 
 class _Item_CheckoutState extends State<Item_Checkout> {
-
-
-    final _formKey = GlobalKey<FormBuilderState>();
-    bool _phoneHasError = false;
-    String phone = '';
+  final _formKey = GlobalKey<FormBuilderState>();
+  bool _phoneHasError = false;
+  String phone = '';
+  bool phoneready = false;
+  bool nameready = false;
+  TextEditingController recipientName = TextEditingController();
+  TextEditingController recipientPhone = TextEditingController();
   @override
   Widget build(BuildContext context) {
-
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, states) {
         if (states is ShopLoginSuccessState) {}
@@ -40,23 +42,17 @@ class _Item_CheckoutState extends State<Item_Checkout> {
           appBar: AppBar(
             title: const Text("Checkout"),
           ),
-          body: Column(
-            children: [
-               ShopCubit.get(context).cart.isNotEmpty
-               ? Text("phone") : const SizedBox(height: 30,), 
-              Container(
-                margin:
-                    EdgeInsets.only(bottom: MediaQuery.of(context).size.width / 4),
-                child: ShopCubit.get(context).cart.isNotEmpty
-                    ? ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: ShopCubit.get(context).cart.length,
-                        itemBuilder: (context, index) {
-                          return item(context, index);
-                        })
-                    : const Center(child: Center(child: Text("No Orders in cart"))),
-              ),
-            ],
+          body: Container(
+            margin:
+                EdgeInsets.only(bottom: MediaQuery.of(context).size.width / 4),
+            child: ShopCubit.get(context).cart.isNotEmpty
+                ? ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: ShopCubit.get(context).cart.length,
+                    itemBuilder: (context, index) {
+                      return item(context, index);
+                    })
+                : const Center(child: Center(child: Text("No Orders in cart"))),
           ),
           bottomSheet: Container(
             margin: const EdgeInsets.all(10),
@@ -74,15 +70,12 @@ class _Item_CheckoutState extends State<Item_Checkout> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 5),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const SizedBox(height: 5),
                               Row(
                                 children: [
-                                  // Text(
-                                  //   "Total : D",
-                                  //   style: TextStyle(
-                                  //       fontSize: , color: Colors.white),
-                                  // ),
                                   Text(
                                     "\$ ${total(context)}.00",
                                     style: const TextStyle(
@@ -103,20 +96,20 @@ class _Item_CheckoutState extends State<Item_Checkout> {
                           showMessage("Error", "Can't checkout an empty cart");
                           return;
                         }
-                        // ShopCubit.get(context).type = 'item';
-                        setState(() {});
-                        if (ShopCubit.get(context).loginModel == null) {
-                          navigateTo(
-                              context,
-                              const ShopLoginScreen(
-                                next: Final_Checkout(),
-                              ));
-                        } else {
-                          navigateTo(
-                              context,
-                               Final_Checkout(),
-                              );
-                        }
+                        print(getRecipientData());
+                        // setState(() {});
+                        // if (ShopCubit.get(context).loginModel == null) {
+                        //   navigateTo(
+                        //       context,
+                        //       const ShopLoginScreen(
+                        //         next: Final_Checkout(),
+                        //       ));
+                        // } else {
+                        //   // navigateTo(
+                        //   //   context,
+                        //   //   Final_Checkout(),
+                        //   // );
+                        // }
                       },
                       child: Container(
                         height: MediaQuery.of(context).size.width / 4,
@@ -167,7 +160,81 @@ class _Item_CheckoutState extends State<Item_Checkout> {
     }
   }
 
-
+  getRecipientData() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Reciepient Info"),
+            content: SizedBox(
+              height: 150,
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  designedFormField(
+                    controller: recipientName,
+                    type: TextInputType.name,
+                    label: 'Name',
+                    onChange: (val) {
+                      print(val);
+                      if (val.length >= 7) {
+                        print("name ready:" + val);
+                        nameready = true;
+                        setState(() {});
+                      } else {
+                        nameready = false;
+                      }
+                    },
+                    validator: (value) {},
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  designedFormField(
+                    controller: recipientPhone,
+                    type: TextInputType.number,
+                    label: 'Phone Number',
+                    onChange: (val) {
+                      print(val);
+                      if (val.length >= 7) {
+                        print("phone ready:" + val);
+                        phoneready = true;
+                        setState(() {});
+                      } else {
+                        phoneready = false;
+                      }
+                    },
+                    validator: (value) {},
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: (phoneready && nameready)
+                      ? Colors.redAccent
+                      : Colors.grey, // Background color
+                ),
+                child: const Text("Continue"),
+                onPressed: () {
+                  if (phoneready && nameready) {
+                    ShopCubit.get(context).recipientName =
+                        recipientName.value.text;
+                    ShopCubit.get(context).recipientPhone =
+                        recipientPhone.value.text;
+                    // vavigate to new spot
+                    // Navigator.of(context).pop();
+                    navigateTo(context, Final_Checkout());
+                  }
+                },
+              )
+            ],
+          );
+        });
+  }
 
   double? total(BuildContext context) {
     double total = 0;
@@ -176,7 +243,6 @@ class _Item_CheckoutState extends State<Item_Checkout> {
     });
     return total;
   }
-
 
   Widget item(BuildContext context, int index) {
     return Padding(
@@ -204,7 +270,7 @@ class _Item_CheckoutState extends State<Item_Checkout> {
                   height: MediaQuery.of(context).size.height / 5.2,
                   child: Image(
                     image: NetworkImage(
-                        "http://localhost:3000/img?id=" +
+                        '${URL}img?id=' +
                             ShopCubit.get(context).cart[index].image!,
                         headers: {'x-auth-token': "token"}),
                     width: 180,
@@ -350,6 +416,4 @@ class _Item_CheckoutState extends State<Item_Checkout> {
           );
         });
   }
-
- 
 }

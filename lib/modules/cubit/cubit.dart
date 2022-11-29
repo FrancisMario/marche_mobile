@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:marche/models/shop_app/airtime_model.dart';
 import 'package:marche/models/shop_app/nawec_model.dart';
 import 'package:marche/models/shop_app/shopdata_model.dart';
+import 'package:marche/modules/checkout/webview.dart';
 import 'package:marche/modules/cubit/states.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 
@@ -39,9 +40,28 @@ class ShopCubit extends Cubit<ShopStates> {
 
   ShopLoginModel? userDataModel;
   ShopModel? shop;
+
+  String? recipientName = null;
+  String? recipientPhone = null;
+
   List<ItemDataModel> cart = [];
   // get locations, shops and items
-  void initApp() {
+  void initApp() async {
+    var loginmodel = CacheHelper.getData(key: 'loginmodel');
+    print("loginmodel");
+    print(loginmodel);
+    print("loginmodel");
+
+    if (loginmodel != null) {
+      try {
+        loginModel = ShopLoginModel.fromJson(json.decode(loginmodel));
+        print("saved session login success");
+      } catch (error) {
+        await CacheHelper.removeData(key: 'loginmodel');
+        loginModel = null;
+        print("saved session login success");
+      }
+    }
     emit(ShopInitLoadingState());
     DioHelper.getData(
       url: 'api/init',
@@ -61,7 +81,6 @@ class ShopCubit extends Cubit<ShopStates> {
   void userData(data) {
     isProcessing = true;
     emit(ShopLoadingNawecVend());
-    print('vending');
     DioHelper.postData(url: NAWEC_VEND, token: token, data: data).then((value) {
       // cartModel = CartModel.fromJson(value.data);
       emit(ShopSuccessNawecVend());
@@ -217,13 +236,18 @@ class ShopCubit extends Cubit<ShopStates> {
       'password': password,
       'name': name,
       'phone': phone,
-    }).then((value) {
+    }).then((value) async {
       loginModel = ShopLoginModel.fromJson(value.data);
+      print('registration success');
+      await CacheHelper.saveData(
+          key: 'loginmodel', value: value.data.toString());
       emit(ShopRegisterSuccessState());
     }).catchError((error) {
       if (kDebugMode) {
         print(error.toString());
       }
+      print('registration error');
+      print(error);
       emit(ShopRegisterErrorState());
     });
   }
@@ -248,14 +272,23 @@ class ShopCubit extends Cubit<ShopStates> {
     DioHelper.postData(url: LOGIN, data: {
       'email': email,
       'password': password,
-    }).then((value) {
+    }).then((value) async {
       if (kDebugMode) {
         print("value => " + value.toString());
       }
       print(value.data);
       loginModel = ShopLoginModel.fromJson(value.data);
+      token = loginModel!.data!.token;
+      await CacheHelper.saveData(
+          key: 'loginmodel', value: value.data.toString());
+      print('login success');
+      await CacheHelper.getData(key: 'loginmodel');
+      print('login success');
+
       emit(ShopLoginSuccessState());
     }).catchError((error) {
+      print('login success');
+      print("error");
       print(error);
       if (kDebugMode) {
         print(error.toString());
@@ -275,17 +308,58 @@ class ShopCubit extends Cubit<ShopStates> {
       'name': name,
       'phone': phone,
       'location': location,
-    }).then((value) {
+    }).then((value) async {
       if (kDebugMode) {
         print("value => " + value.toString());
         print(value.data);
       }
+      print('register success');
+      await CacheHelper.getData(key: 'loginmodel');
+      print('register success');
       emit(ShopLoginSuccessState());
     }).catchError((error) {
       if (kDebugMode) {
         print(error.toString());
       }
       emit(ShopLoginErrorState());
+    });
+  }
+
+// get order payment hash
+
+  dynamic paymentinfo = null;
+
+  void getPaymentLink(BuildContext context) async {
+    emit(PaymentLinkInitialState());
+    emit(PaymentLinkLoadingState());
+    var items = [];
+    cart.forEach((e) => {
+          items.add({'_id': e.id}),
+        });
+    print("------------------------items");
+    print(items);
+    print(token);
+    print("------------------------items");
+    DioHelper.postData(
+            url: "/admin/orders",
+            data: {
+              'itemid': items,
+              'type': "item",
+              "amount": cartModel.total()
+            },
+            token: token)
+        .then((value) {
+      paymentinfo = value;
+      print("------------------------value");
+      print(value);
+      print("------------------------value");
+      emit(PaymentLinkSuccessState());
+      Navigator.of(context).pop();
+      navigateTo(context, WebViewXPage());
+    }).catchError((error) {
+      print(error.toString());
+      Navigator.of(context).pop();
+      emit(PaymentLinkErrorState());
     });
   }
 }

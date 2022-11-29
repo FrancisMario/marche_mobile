@@ -46,8 +46,6 @@ class _ShopLoginScreenState extends State<ShopLoginScreen> {
                 .then((value) {
               ShopCubit.get(context).token =
                   ShopCubit.get(context).loginModel!.data!.token!;
-              navigateAndFinish(context, widget.next);
-              // Navigator.of(context).pop();
             });
           } else {}
         }
