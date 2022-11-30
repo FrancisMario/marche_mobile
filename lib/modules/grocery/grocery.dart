@@ -150,7 +150,10 @@ class _GroceryScreenState extends State<GroceryScreen> {
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500),
                                   ),
-                                  DropdownButton<ShopsDataModel>(
+                                  !ShopCubit.get(context)
+                                                .shop!
+                                                .locations[activeLocation]
+                                                .shops.isNotEmpty ? DropdownButton<ShopsDataModel>(
                                     // ignore: prefer_is_empty
                                     value: ShopCubit.get(context)
                                                 .shop!
@@ -180,7 +183,7 @@ class _GroceryScreenState extends State<GroceryScreen> {
                                               value: value,
                                               child: Text(
                                                 value.name!,
-                                                style: TextStyle(fontSize: 15),
+                                                style: const TextStyle(fontSize: 15),
                                               ),
                                             );
                                           }).toList()
@@ -200,7 +203,7 @@ class _GroceryScreenState extends State<GroceryScreen> {
                                         }
                                       });
                                     },
-                                  ),
+                                  ) : SizedBox(width: 10,),
                                 ],
                               ),
                             ),

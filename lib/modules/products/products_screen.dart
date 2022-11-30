@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,13 +8,8 @@ import 'package:marche/modules/airtime/buyairtime.dart';
 import 'package:marche/modules/cashpower/cashpower.dart';
 import 'package:marche/modules/cubit/states.dart';
 import 'package:marche/modules/grocery/grocery.dart';
-import 'package:marche/modules/grocery/item_card.dart';
-import '../../models/shop_app/home_model.dart';
 import '../../shared/components/components.dart';
 import '../cubit/cubit.dart';
-import '../cubit/states.dart';
-import '../login/shop_login-screen.dart';
-import '../product_details/product_details_screen.dart';
 
 class ProductsScreen extends StatelessWidget {
   ProductsScreen({Key? key}) : super(key: key);
@@ -131,42 +128,41 @@ class ProductsScreen extends StatelessWidget {
           dynamic? title,
           dynamic? description,
           dynamic? onclick,
-          BuildContext? context}) =>
+          required BuildContext context}) =>
       GestureDetector(
         onTap: () => {navigateTo(context, onclick)},
         child: Card(
-          clipBehavior: Clip.antiAlias,
           elevation: 5.0,
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Image.asset(
                 img!,
-                height: 100,
-                width: 100,
+                height: MediaQuery.of(context).size.width / 4.2,
+                width:  MediaQuery.of(context).size.width / 4.2,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      title!,
-                      style: TextStyle(
-                          color: Colors.redAccent,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400),
-                      textAlign: TextAlign.left,
-                    ),
-                    Container(
-                      child: Text(
-                        description!,
-                        style: TextStyle(color: Colors.black, fontSize: 15),
+                child: Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        title!,
+                        style: const TextStyle(
+                            color: Colors.redAccent,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400),
+                        textAlign: TextAlign.left,
+                      ),
+                      Text(
+                        description,
+                        style: const TextStyle(
+                            color: Colors.black, fontSize: 15),
                         overflow: TextOverflow.clip,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

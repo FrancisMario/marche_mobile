@@ -334,7 +334,7 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(PaymentLinkLoadingState());
     var items = [];
     cart.forEach((e) => {
-          items.add({'_id': e.id}),
+          items.add(e.id),
         });
     print("------------------------items");
     print(items);
